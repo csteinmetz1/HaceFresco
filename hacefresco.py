@@ -6,27 +6,32 @@ import spotipy
 import spotipy.util as util
 from spotipy.oauth2 import SpotifyClientCredentials
 
-def get_random_word():
-    """ Opens english words dictionary and returns a random entry
+class random_words():
 
-    Returns
-    ----------
-    word : str
-        Random english word.
-    """
-    #with open('english-words/words_dictionary.json') as json_file:
-        #wordlist = json.load(json_file)
-        #word = random.choice(list(wordlist.keys()))
-    with open('dictionary/popular.txt') as text_file:
-        wordlist = text_file.read().split()
-        word = random.choice(wordlist)
-    return word
+    def __init__(self, weirdness=1):
+        if weirdness == 1:
+           self. wordlist = open('dictionary/popular.txt').read().split()
+        elif weirdness == 2:
+            self.wordlist = open('dictionary/enable1.txt').read().split()
+        else:
+            self.wordlist = open('dictionary/unix-words').read().split()
+
+    def get_random_word(self):
+        """ Opens english words dictionary and returns a random entry
+
+        Returns
+        ----------
+        word : str
+            Random english word.
+        """
+        word = random.choice(self.wordlist)
+        return word
 
 def auth(username, scope):
     token = util.prompt_for_user_token(username, scope, redirect_uri = 'http://localhost/')
     return token
 
-def generate_random_playlist(username, songs=20, special=""):
+def generate_random_playlist(username, r, songs=20, special=""):
     # get the user id and playlist write auth
     token = auth(username, 'user-read-private playlist-modify-public')
     sp = spotipy.Spotify(auth=token)
@@ -39,12 +44,12 @@ def generate_random_playlist(username, songs=20, special=""):
     # collect number of specified random songs
     for i in range(songs):
         random_offset = 0#random.randint(0,9)
-        random_word = get_random_word()
+        random_word = r.get_random_word()
         print ("searching " + special + " " + random_word + "...")
         result = sp.search(special + " " + random_word, limit=10, type='track', offset=random_offset)
         # if no results are returned search a new word
         while result['tracks']['items'] == []:
-            random_word = get_random_word()
+            random_word = r.get_random_word()
             print ("searching " + special + " " + random_word + "...")
             result = sp.search(special + " " + random_word, limit=10, type='track', offset=random_offset)
         track_ids.append(result['tracks']['items'][0]['id'])
@@ -62,5 +67,6 @@ def generate_random_playlist(username, songs=20, special=""):
     # add random tracks to new playlist
     sp.user_playlist_add_tracks(user_id, playlist_id, track_ids)
 
+r = random_words(weirdness=3)
 user = 'csteinmetz1'
-generate_random_playlist(user)
+generate_random_playlist(user, r)
