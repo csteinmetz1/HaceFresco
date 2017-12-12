@@ -1,3 +1,6 @@
 [submodule "english-words"]
 	path = english-words
 	url = https://github.com/dwyl/english-words
+[submodule "dictionary"]
+	path = dictionary
+	url = https://github.com/dolph/dictionary
