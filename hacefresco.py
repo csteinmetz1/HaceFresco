@@ -42,14 +42,15 @@ def generate_random_playlist(username, songs=20):
 
     # collect number of specified random songs
     for i in range(songs):
-        result = sp.search(random_word(), limit=1, type='track')
+        random_offset = random.randint(0,9)
+        result = sp.search(random_word(), limit=10, type='track', offset=random_offset)
         # if no results are returned search a new word
         while result['tracks']['items'] == []:
-            result = sp.search(random_word(), limit=1, type='track')
+            result = sp.search(random_word(), limit=10, type='track', offset=random_offset)
         track_ids.append(result['tracks']['items'][0]['id'])
         print("added " + result['tracks']['items'][0]['name'] + " | " + result['tracks']['items'][0]['artists'][0]['name'])
 
-    playlist_name = 'Random Playlist'
+    playlist_name = 'Very Random Playlist'
 
     # create new playlist and get its id
     playlists = sp.user_playlist_create(user_id, playlist_name, public=True)
