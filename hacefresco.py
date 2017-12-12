@@ -43,7 +43,7 @@ def generate_random_playlist(username, r, songs=20, special=""):
 
     # collect number of specified random songs
     for i in range(songs):
-        random_offset = 0#random.randint(0,9)
+        random_offset = random.randint(0,2)
         random_word = r.get_random_word()
         print ("searching " + special + " " + random_word + "...")
         result = sp.search(special + " " + random_word, limit=10, type='track', offset=random_offset)
